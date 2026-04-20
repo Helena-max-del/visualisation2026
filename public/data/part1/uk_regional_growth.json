@@ -1,0 +1,546 @@
+{
+  "sourceWorkbook": "evci0101_2026-01_EV_chargers_by_region_and_country_UK.ods",
+  "note": "DfT note 4: region-level summaries are shown from January 2025 onward because data quality improved after the Public Charge Point Regulations 2023 open-data requirement.",
+  "regions": [
+    {
+      "name": "North East",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 3504,
+          "devices50kwPlus": 693,
+          "totalPer100k": 126.9,
+          "devices50kwPlusPer100k": 25.1
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 3438,
+          "devices50kwPlus": 742,
+          "totalPer100k": 124.5,
+          "devices50kwPlusPer100k": 26.9
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 3552,
+          "devices50kwPlus": 807,
+          "totalPer100k": 128.7,
+          "devices50kwPlusPer100k": 29.2
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 3560,
+          "devices50kwPlus": 823,
+          "totalPer100k": 129.0,
+          "devices50kwPlusPer100k": 29.8
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 3834,
+          "devices50kwPlus": 893,
+          "totalPer100k": 138.9,
+          "devices50kwPlusPer100k": 32.3
+        }
+      ]
+    },
+    {
+      "name": "North West",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 7271,
+          "devices50kwPlus": 2263,
+          "totalPer100k": 94.0,
+          "devices50kwPlusPer100k": 29.2
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 7395,
+          "devices50kwPlus": 2358,
+          "totalPer100k": 95.6,
+          "devices50kwPlusPer100k": 30.5
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 7804,
+          "devices50kwPlus": 2543,
+          "totalPer100k": 100.9,
+          "devices50kwPlusPer100k": 32.9
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 8142,
+          "devices50kwPlus": 2724,
+          "totalPer100k": 105.2,
+          "devices50kwPlusPer100k": 35.2
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 8120,
+          "devices50kwPlus": 2853,
+          "totalPer100k": 104.9,
+          "devices50kwPlusPer100k": 36.9
+        }
+      ]
+    },
+    {
+      "name": "Yorkshire and The Humber",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 5720,
+          "devices50kwPlus": 1712,
+          "totalPer100k": 100.8,
+          "devices50kwPlusPer100k": 30.2
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 5783,
+          "devices50kwPlus": 1813,
+          "totalPer100k": 101.9,
+          "devices50kwPlusPer100k": 32.0
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 6202,
+          "devices50kwPlus": 1818,
+          "totalPer100k": 109.3,
+          "devices50kwPlusPer100k": 32.0
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 6349,
+          "devices50kwPlus": 1923,
+          "totalPer100k": 111.9,
+          "devices50kwPlusPer100k": 33.9
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 6153,
+          "devices50kwPlus": 1881,
+          "totalPer100k": 108.5,
+          "devices50kwPlusPer100k": 33.2
+        }
+      ]
+    },
+    {
+      "name": "East Midlands",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 5505,
+          "devices50kwPlus": 1769,
+          "totalPer100k": 108.7,
+          "devices50kwPlusPer100k": 34.9
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 5389,
+          "devices50kwPlus": 1734,
+          "totalPer100k": 106.4,
+          "devices50kwPlusPer100k": 34.2
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 5277,
+          "devices50kwPlus": 1771,
+          "totalPer100k": 104.2,
+          "devices50kwPlusPer100k": 35.0
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 5405,
+          "devices50kwPlus": 1814,
+          "totalPer100k": 106.8,
+          "devices50kwPlusPer100k": 35.8
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 6119,
+          "devices50kwPlus": 2192,
+          "totalPer100k": 120.9,
+          "devices50kwPlusPer100k": 43.3
+        }
+      ]
+    },
+    {
+      "name": "West Midlands",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 8689,
+          "devices50kwPlus": 2357,
+          "totalPer100k": 140.4,
+          "devices50kwPlusPer100k": 38.1
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 9083,
+          "devices50kwPlus": 2293,
+          "totalPer100k": 146.8,
+          "devices50kwPlusPer100k": 37.1
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 9732,
+          "devices50kwPlus": 2354,
+          "totalPer100k": 157.3,
+          "devices50kwPlusPer100k": 38.0
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 9723,
+          "devices50kwPlus": 2442,
+          "totalPer100k": 157.1,
+          "devices50kwPlusPer100k": 39.5
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 9890,
+          "devices50kwPlus": 2559,
+          "totalPer100k": 159.8,
+          "devices50kwPlusPer100k": 41.4
+        }
+      ]
+    },
+    {
+      "name": "East of England",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 8249,
+          "devices50kwPlus": 2357,
+          "totalPer100k": 125.4,
+          "devices50kwPlusPer100k": 35.8
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 8552,
+          "devices50kwPlus": 2440,
+          "totalPer100k": 130.0,
+          "devices50kwPlusPer100k": 37.1
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 8898,
+          "devices50kwPlus": 2631,
+          "totalPer100k": 135.3,
+          "devices50kwPlusPer100k": 40.0
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 9103,
+          "devices50kwPlus": 2719,
+          "totalPer100k": 138.4,
+          "devices50kwPlusPer100k": 41.3
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 9269,
+          "devices50kwPlus": 2892,
+          "totalPer100k": 140.9,
+          "devices50kwPlusPer100k": 44.0
+        }
+      ]
+    },
+    {
+      "name": "London",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 25474,
+          "devices50kwPlus": 2229,
+          "totalPer100k": 280.3,
+          "devices50kwPlusPer100k": 24.5
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 26505,
+          "devices50kwPlus": 2228,
+          "totalPer100k": 291.6,
+          "devices50kwPlusPer100k": 24.5
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 27406,
+          "devices50kwPlus": 2190,
+          "totalPer100k": 301.5,
+          "devices50kwPlusPer100k": 24.1
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 29522,
+          "devices50kwPlus": 2213,
+          "totalPer100k": 324.8,
+          "devices50kwPlusPer100k": 24.3
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 30728,
+          "devices50kwPlus": 2329,
+          "totalPer100k": 338.1,
+          "devices50kwPlusPer100k": 25.6
+        }
+      ]
+    },
+    {
+      "name": "South East",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 13726,
+          "devices50kwPlus": 3375,
+          "totalPer100k": 142.3,
+          "devices50kwPlusPer100k": 35.0
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 13838,
+          "devices50kwPlus": 3506,
+          "totalPer100k": 143.5,
+          "devices50kwPlusPer100k": 36.4
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 14471,
+          "devices50kwPlus": 3536,
+          "totalPer100k": 150.1,
+          "devices50kwPlusPer100k": 36.7
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 14869,
+          "devices50kwPlus": 3597,
+          "totalPer100k": 154.2,
+          "devices50kwPlusPer100k": 37.3
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 14406,
+          "devices50kwPlus": 3506,
+          "totalPer100k": 149.4,
+          "devices50kwPlusPer100k": 36.4
+        }
+      ]
+    },
+    {
+      "name": "South West",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 7947,
+          "devices50kwPlus": 2276,
+          "totalPer100k": 134.9,
+          "devices50kwPlusPer100k": 38.6
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 8191,
+          "devices50kwPlus": 2414,
+          "totalPer100k": 139.1,
+          "devices50kwPlusPer100k": 41.0
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 8430,
+          "devices50kwPlus": 2514,
+          "totalPer100k": 143.1,
+          "devices50kwPlusPer100k": 42.7
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 8823,
+          "devices50kwPlus": 2633,
+          "totalPer100k": 149.8,
+          "devices50kwPlusPer100k": 44.7
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 8716,
+          "devices50kwPlus": 2692,
+          "totalPer100k": 148.0,
+          "devices50kwPlusPer100k": 45.7
+        }
+      ]
+    },
+    {
+      "name": "Wales",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 4754,
+          "devices50kwPlus": 1047,
+          "totalPer100k": 149.2,
+          "devices50kwPlusPer100k": 32.9
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 4936,
+          "devices50kwPlus": 1111,
+          "totalPer100k": 154.9,
+          "devices50kwPlusPer100k": 34.9
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 5237,
+          "devices50kwPlus": 1175,
+          "totalPer100k": 164.3,
+          "devices50kwPlusPer100k": 36.9
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 5610,
+          "devices50kwPlus": 1231,
+          "totalPer100k": 176.1,
+          "devices50kwPlusPer100k": 38.6
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 5644,
+          "devices50kwPlus": 1273,
+          "totalPer100k": 177.1,
+          "devices50kwPlusPer100k": 39.9
+        }
+      ]
+    },
+    {
+      "name": "Scotland",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 10899,
+          "devices50kwPlus": 2665,
+          "totalPer100k": 196.5,
+          "devices50kwPlusPer100k": 48.0
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 11625,
+          "devices50kwPlus": 2945,
+          "totalPer100k": 209.6,
+          "devices50kwPlusPer100k": 53.1
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 12070,
+          "devices50kwPlus": 3174,
+          "totalPer100k": 217.6,
+          "devices50kwPlusPer100k": 57.2
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 12249,
+          "devices50kwPlus": 3156,
+          "totalPer100k": 220.8,
+          "devices50kwPlusPer100k": 56.9
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 12065,
+          "devices50kwPlus": 2986,
+          "totalPer100k": 217.5,
+          "devices50kwPlusPer100k": 53.8
+        }
+      ]
+    },
+    {
+      "name": "Northern Ireland",
+      "series": [
+        {
+          "dateLabel": "1 January 2025",
+          "quarter": "2025-Q1",
+          "totalDevices": 1033,
+          "devices50kwPlus": 254,
+          "totalPer100k": 53.6,
+          "devices50kwPlusPer100k": 13.2
+        },
+        {
+          "dateLabel": "1 April 2025",
+          "quarter": "2025-Q2",
+          "totalDevices": 1036,
+          "devices50kwPlus": 296,
+          "totalPer100k": 53.7,
+          "devices50kwPlusPer100k": 15.4
+        },
+        {
+          "dateLabel": "1 July 2025",
+          "quarter": "2025-Q3",
+          "totalDevices": 1053,
+          "devices50kwPlus": 300,
+          "totalPer100k": 54.6,
+          "devices50kwPlusPer100k": 15.6
+        },
+        {
+          "dateLabel": "1 October 2025",
+          "quarter": "2025-Q4",
+          "totalDevices": 1131,
+          "devices50kwPlus": 315,
+          "totalPer100k": 58.7,
+          "devices50kwPlusPer100k": 16.3
+        },
+        {
+          "dateLabel": "1 January 2026",
+          "quarter": "2026-Q1",
+          "totalDevices": 1108,
+          "devices50kwPlus": 322,
+          "totalPer100k": 57.5,
+          "devices50kwPlusPer100k": 16.7
+        }
+      ]
+    }
+  ]
+}
