@@ -18,12 +18,12 @@ const cityConfigs = [
       'London has the densest mapped charging network, with visible clusters around inner-city destinations, major roads, and borough town centres.',
   },
   {
-    id: 'liverpool',
-    name: 'Liverpool',
-    center: [-2.9916, 53.4084],
-    dataPath: '/data/part1/liverpool_charging_osm.geojson',
+    id: 'birmingham',
+    name: 'Birmingham',
+    center: [-1.8904, 52.4862],
+    dataPath: '/data/part1/birmingham_charging_osm.geojson',
     summary:
-      'Liverpool has a smaller mapped network, so the distribution is easier to read as a set of concentrated city-centre, waterfront, and strategic-road facilities.',
+      'Birmingham shows a dispersed charging network across the city centre, major retail parks, and strategic road corridors, reflecting its role as the UK\'s second-largest city.',
   },
   {
     id: 'leeds',
@@ -534,7 +534,7 @@ export default function CityFacilitiesGlobe() {
         padding: { top: 80, right: 80, bottom: 80, left: 80 },
         duration: 1800,
         pitch: 42,
-        bearing: activeCity.id === 'london' ? -12 : -20,
+        bearing: activeCity.id === 'london' ? -12 : activeCity.id === 'birmingham' ? -15 : -20,
         essential: true,
       })
     } else {
@@ -542,7 +542,7 @@ export default function CityFacilitiesGlobe() {
         center: activeCity.center,
         zoom: 9.5,
         pitch: 42,
-        bearing: activeCity.id === 'london' ? -12 : -20,
+        bearing: activeCity.id === 'london' ? -12 : activeCity.id === 'birmingham' ? -15 : -20,
         duration: 1600,
         essential: true,
       })
@@ -565,7 +565,7 @@ export default function CityFacilitiesGlobe() {
           <h2 className="part1-city-title">Where are charging facilities concentrated in major cities?</h2>
           <p className="part1-city-intro">
             The regional trend is broad, so this map zooms into three urban examples. Start from the rotating globe,
-            then compare London, Liverpool, and Leeds through clustered points or a heatmap.
+            then compare London, Birmingham, and Leeds through clustered points or a heatmap.
           </p>
         </div>
 
