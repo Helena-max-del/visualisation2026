@@ -9,7 +9,7 @@ const CITY_CONFIGS = [
     dataPath: '/data/part1/london_charging_osm.geojson',
     accent: 'blue',
     insight:
-      'London combines the densest mapped network with the greatest internal inequality, which is why borough-level adequacy matters here.',
+      'London combines the densest mapped network in this three-city comparison with pronounced borough-level contrasts, which is why adequacy matters here.',
     Icon: PulseBarsGlyph,
   },
   {
@@ -18,7 +18,7 @@ const CITY_CONFIGS = [
     dataPath: '/data/part1/birmingham_charging_osm.geojson',
     accent: 'amber',
     insight:
-      'Birmingham reads as more corridor-led and dispersed, suggesting that citywide coverage and strategic road access may matter more than borough-style clustering.',
+      'Birmingham appears more corridor-led and dispersed in the Part 1 map pattern, suggesting that citywide coverage and strategic road access may matter more than borough-style clustering.',
     Icon: RapidBoltGlyph,
   },
   {
@@ -27,7 +27,7 @@ const CITY_CONFIGS = [
     dataPath: '/data/part1/leeds_charging_osm.geojson',
     accent: 'plum',
     insight:
-      'Leeds sits between the two: less saturated than London, but still structured around centre-ring-road and destination clusters rather than a uniformly dense network.',
+      'Leeds sits between the two in this comparison: less saturated than London, but still structured around centre-ring-road and destination clusters rather than a uniformly dense network.',
     Icon: OrbitRingGlyph,
   },
 ]
@@ -43,6 +43,15 @@ function summariseStations(collection) {
   const features = (collection?.features || []).filter(
     (feature) => feature.geometry?.type === 'Point' && Array.isArray(feature.geometry.coordinates),
   )
+
+  const cityCounts = new Map()
+  features.forEach((feature) => {
+    const city = feature.properties?.city
+    if (!city) return
+    cityCounts.set(city, (cityCounts.get(city) || 0) + 1)
+  })
+
+  const dominantCity = [...cityCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null
 
   const enriched = features.map((feature) => {
     const props = feature.properties || {}
@@ -65,6 +74,7 @@ function summariseStations(collection) {
   ).size
 
   return {
+    dominantCity,
     stationCount,
     rapidCount,
     rapidShare: stationCount ? (rapidCount / stationCount) * 100 : 0,
@@ -85,7 +95,7 @@ export default function CityContextPanel() {
         const summaries = CITY_CONFIGS.map((city, index) => ({
           ...city,
           ...summariseStations(payloads[index]),
-        }))
+        })).filter((city) => !city.dominantCity || city.dominantCity === city.name)
 
         setState({ loading: false, error: null, summaries })
       })
@@ -143,7 +153,6 @@ export default function CityContextPanel() {
                 <city.Icon live />
               </div>
               <div>
-                <p className="p2-chart-eyebrow">Part 1 dataset</p>
                 <h3 className="p2-chart-title">{city.name}</h3>
               </div>
             </div>
@@ -174,7 +183,8 @@ export default function CityContextPanel() {
 
       <p className="p2-chart-footnote">
         Reused from Part 1: OpenStreetMap charging-station points for London, Birmingham, and
-        Leeds. These city summaries are exploratory spatial context rather than audited official counts.
+        Leeds. These city summaries are exploratory spatial context rather than audited official
+        counts.
       </p>
     </section>
   )

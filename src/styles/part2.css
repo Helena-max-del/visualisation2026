@@ -433,6 +433,13 @@
   color: rgba(35, 38, 45, 0.68);
 }
 
+.p2-city-warning {
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #c47a1a;
+}
+
 .part2-city-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
