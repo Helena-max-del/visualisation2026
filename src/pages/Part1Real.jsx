@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import Reveal from '../components/common/Reveal'
 import GrowthTimeline from '../components/part1/GrowthTimeline'
 import GrowthTrendChart from '../components/part1/GrowthTrendChart'
+import CityFocusBridge from '../components/part1/CityFocusBridge'
 import CityFacilitiesGlobe from '../components/part1/CityFacilitiesGlobe'
 import RegionalComparisonSection from '../components/part1/RegionalComparisonSection'
 import SpeedBandShowcase from '../components/part1/SpeedBandShowcase'
@@ -163,28 +164,28 @@ export default function Part1Real() {
       <section className="part1-shell" id="part1-story-start">
         <div className="part1-wrap">
           <Reveal>
-            <div className="part1-page-heading">
-              <p className="eyebrow">Part 1 | Network growth</p>
-              <h1 className="part1-page-title">How quickly has the UK charging network grown?</h1>
-              <p className="part1-page-subtitle">
-                This section tracks headline network growth, the policy moments that shaped it, the regional pattern
-                behind the national curve, and the shift from standard chargers towards faster provision.
+            <div className="part1-page-heading part1-opening-block">
+              <p className="eyebrow part1-opening-kicker">Part 1 | Network growth</p>
+              <h1 className="part1-page-title part1-opening-title">How quickly has the UK charging network grown?</h1>
+              <p className="part1-page-subtitle part1-opening-subtitle">
+                This section tracks headline network growth, the policy moments that shaped it, the regional overview
+                behind the national curve, and the city case studies that bring those trends down to urban scale.
               </p>
             </div>
           </Reveal>
 
           <Reveal>
-            <div className="part1-intro-grid">
-              <div>
-                <p className="eyebrow">Why this matters</p>
-                <h2 className="part1-section-heading">Growth is not the same as readiness</h2>
+            <div className="part1-intro-grid part1-opening-block part1-opening-block--secondary">
+              <div className="part1-opening-pane">
+                <p className="eyebrow part1-opening-kicker part1-opening-kicker--delayed">Why this matters</p>
+                <h2 className="part1-section-heading part1-opening-section-title">Growth is not the same as readiness</h2>
               </div>
-              <div className="part1-intro-copy">
-                <p>
+              <div className="part1-intro-copy part1-opening-copy">
+                <p className="part1-opening-paragraph part1-opening-paragraph--first">
                   As EV adoption rises, public charging availability becomes a practical condition for whether the
                   transport transition feels possible in everyday life.
                 </p>
-                <p>
+                <p className="part1-opening-paragraph part1-opening-paragraph--second">
                   Part 1 therefore begins with a simple question: how quickly has the UK public charging network grown,
                   and has that growth also improved the speed and convenience of charging?
                 </p>
@@ -235,10 +236,14 @@ export default function Part1Real() {
           </Reveal>
 
           <Reveal delay={0.17}>
-            <CityFacilitiesGlobe />
+            <CityFocusBridge />
           </Reveal>
 
           <Reveal delay={0.18}>
+            <CityFacilitiesGlobe />
+          </Reveal>
+
+          <Reveal delay={0.19}>
             <SpeedBandShowcase data={speedData} />
           </Reveal>
 
@@ -268,8 +273,8 @@ export default function Part1Real() {
                 <article className="glass-card takeaway-card">
                   <p>03</p>
                   <p>
-                    The comparable region series only starts in 2025-Q1, but it already shows how much the latest stock
-                    is concentrated in {regionalLeader?.name || 'the leading region'}.
+                    The comparable region series only starts in 2025-Q1, but it already shows how the latest stock is
+                    distributed across regions, with {regionalLeader?.name || 'the leading region'} currently ahead.
                   </p>
                 </article>
               </div>

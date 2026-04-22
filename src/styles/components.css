@@ -247,6 +247,7 @@
 }
 
 .about-heading p,
+.about-section__header p,
 .about-card p,
 .about-card li {
   color: rgba(35, 38, 45, 0.72);
@@ -258,6 +259,27 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
+}
+
+.about-section + .about-section {
+  margin-top: 36px;
+}
+
+.about-section__header {
+  max-width: 920px;
+  margin-bottom: 18px;
+}
+
+.about-section__header h2 {
+  margin: 0 0 10px;
+  color: #23262d;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.about-section__header p:last-child {
+  margin: 0;
 }
 
 .about-card {
@@ -273,6 +295,13 @@
 }
 
 .about-card h2 {
+  margin: 0 0 14px;
+  color: #23262d;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.about-card h3 {
   margin: 0 0 14px;
   color: #23262d;
   font-size: 24px;

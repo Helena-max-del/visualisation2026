@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
   CartesianGrid,
+  ComposedChart,
   Line,
-  LineChart,
+  ReferenceArea,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -13,7 +14,7 @@ const metricOptions = [
   {
     key: 'totalPer100k',
     label: 'Devices per 100k',
-    summary: 'Normalised comparison across differently sized regions.',
+    summary: 'Population-adjusted overview across differently sized regions.',
   },
   {
     key: 'totalDevices',
@@ -32,7 +33,13 @@ const metricOptions = [
   },
 ]
 
-const linePalette = ['#4f7af2', '#d18b2f', '#3f8c5a', '#c0567a', '#7a85a0']
+const linePalette = ['#99558a', '#5e6d9f', '#2f7b86', '#c694ba', '#95a1b8']
+const quarterBandPalette = [
+  'rgba(153, 85, 138, 0.06)',
+  'rgba(94, 109, 159, 0.05)',
+  'rgba(47, 123, 134, 0.05)',
+  'rgba(198, 148, 186, 0.06)',
+]
 
 function compactNumber(value) {
   const num = Number(value || 0)
@@ -57,6 +64,62 @@ function formatSignedMetricValue(metricKey, value) {
 function formatAxisValue(metricKey, value) {
   if (metricKey.includes('Per100k')) return Number(value).toFixed(value >= 100 ? 0 : 1)
   return compactNumber(value)
+}
+
+function buildMetricDomain(chartData, comparisonRegions) {
+  const values = chartData.flatMap((row) =>
+    comparisonRegions
+      .map((region) => row[region.name])
+      .filter((value) => value != null && Number.isFinite(Number(value)))
+      .map((value) => Number(value)),
+  )
+
+  if (!values.length) return ['auto', 'auto']
+
+  const min = Math.min(...values)
+  const max = Math.max(...values)
+
+  if (min === max) {
+    const padding = min === 0 ? 1 : Math.abs(min) * 0.15
+    return [Math.max(0, min - padding), max + padding]
+  }
+
+  const spread = max - min
+  const lower = Math.max(0, min - spread * 0.18)
+  const upper = max + spread * 0.14
+  return [Number(lower.toFixed(1)), Number(upper.toFixed(1))]
+}
+
+function RegionalBubbleDot({ cx, cy, stroke, payload, isSelected, latestQuarter }) {
+  if (cx == null || cy == null || !payload) return null
+
+  const isLatest = payload.quarter === latestQuarter
+  const outerRadius = isSelected ? (isLatest ? 17 : 15) : 11.5
+
+  return (
+    <g>
+      <circle
+        cx={cx}
+        cy={cy}
+        r={outerRadius}
+        fill={stroke}
+        fillOpacity={isSelected ? 0.38 : 0.26}
+        stroke="rgba(255,255,255,0.82)"
+        strokeWidth={isSelected ? 2.2 : 1.6}
+      />
+      {isSelected && isLatest ? (
+        <text
+          x={cx + 22}
+          y={cy - 12}
+          fill="rgba(35,38,45,0.58)"
+          fontSize="11"
+          fontWeight="700"
+        >
+          Current
+        </text>
+      ) : null}
+    </g>
+  )
 }
 
 export default function RegionalComparisonSection({ data = [], note = '' }) {
@@ -131,18 +194,30 @@ export default function RegionalComparisonSection({ data = [], note = '' }) {
     })
   }, [selectedRegion, comparisonRegions, metricKey])
 
+  const chartDomain = useMemo(() => buildMetricDomain(chartData, comparisonRegions), [chartData, comparisonRegions])
+  const latestQuarter = chartData[chartData.length - 1]?.quarter ?? null
+  const chartBands = useMemo(
+    () =>
+      chartData.slice(0, -1).map((row, index) => ({
+        x1: row.quarter,
+        x2: chartData[index + 1]?.quarter,
+        fill: quarterBandPalette[index % quarterBandPalette.length],
+      })),
+    [chartData],
+  )
+
   if (!hasData || !selectedRegion) return null
 
   return (
     <section className="regional-explorer">
       <div className="glass-card regional-explorer-main">
         <div className="regional-explorer-header">
-          <p className="eyebrow">Regional comparison</p>
-          <h2 className="regional-explorer-title">Region-level inequality only becomes comparable from 2025</h2>
+          <p className="eyebrow">Regional overview</p>
+          <h2 className="regional-explorer-title">Regional distribution overview from 2025</h2>
           <p className="regional-explorer-copy">
             The DfT region tables begin in 2025-Q1, so this section uses the latest five comparable quarters to show
-            where the network is largest, where faster charging is densest, and how the picture changes once population
-            is taken into account.
+            how charging provision is distributed across UK regions, how the picture changes under different metrics,
+            and which places lead once population is taken into account.
           </p>
         </div>
 
@@ -205,47 +280,84 @@ export default function RegionalComparisonSection({ data = [], note = '' }) {
         </div>
 
         <div className="regional-chart-frame">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 14, right: 18, left: 4, bottom: 6 }}>
-              <CartesianGrid stroke="rgba(35,38,45,0.08)" vertical={false} strokeDasharray="4 6" />
-              <XAxis
-                dataKey="quarter"
-                tick={{ fill: 'rgba(35,38,45,0.60)', fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-                tickMargin={10}
-              />
-              <YAxis
-                tickFormatter={(value) => formatAxisValue(metricKey, value)}
-                tick={{ fill: 'rgba(35,38,45,0.60)', fontSize: 12 }}
-                axisLine={false}
-                tickLine={false}
-                width={64}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: 'rgba(248, 245, 239, 0.98)',
-                  border: '1px solid rgba(35,38,45,0.10)',
-                  borderRadius: '8px',
-                  color: '#23262d',
-                }}
-                formatter={(value, name) => [formatMetricValue(metricKey, value), name]}
-              />
+          <div className="regional-chart-head">
+            <div>
+              <p className="regional-panel-eyebrow">Trend view</p>
+              <h3>Comparable five-quarter trajectory</h3>
+            </div>
+            <p>
+              {selectedRegion.name} is highlighted against the current leading comparison regions for {metricMeta.label.toLowerCase()}.
+            </p>
+          </div>
 
-              {comparisonRegions.map((region, index) => (
-                <Line
-                  key={region.name}
-                  type="monotone"
-                  dataKey={region.name}
-                  stroke={linePalette[index % linePalette.length]}
-                  strokeWidth={region.name === selectedRegion.name ? 4 : 2.5}
-                  dot={{ r: region.name === selectedRegion.name ? 4 : 2.5, strokeWidth: 0 }}
-                  activeDot={{ r: 6 }}
-                  connectNulls={false}
+          <div className="regional-chart-body">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={chartData} margin={{ top: 14, right: 28, left: 4, bottom: 6 }}>
+                {chartBands.map((band) =>
+                  band.x2 ? (
+                    <ReferenceArea
+                      key={`${band.x1}-${band.x2}`}
+                      x1={band.x1}
+                      x2={band.x2}
+                      y1={chartDomain[0]}
+                      y2={chartDomain[1]}
+                      fill={band.fill}
+                      fillOpacity={1}
+                      strokeOpacity={0}
+                      ifOverflow="extendDomain"
+                    />
+                  ) : null,
+                )}
+                <CartesianGrid stroke="rgba(135,121,142,0.18)" vertical={false} strokeDasharray="4 6" />
+                <XAxis
+                  dataKey="quarter"
+                  tick={{ fill: 'rgba(35,38,45,0.60)', fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickMargin={10}
                 />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
+                <YAxis
+                  domain={chartDomain}
+                  tickCount={5}
+                  tickFormatter={(value) => formatAxisValue(metricKey, value)}
+                  tick={{ fill: 'rgba(35,38,45,0.60)', fontSize: 12 }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={64}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background: 'rgba(252, 249, 252, 0.98)',
+                    border: '1px solid rgba(153,85,138,0.14)',
+                    borderRadius: '8px',
+                    color: '#23262d',
+                  }}
+                  labelStyle={{ color: '#23262d', fontWeight: 700 }}
+                  formatter={(value, name) => [formatMetricValue(metricKey, value), name]}
+                />
+
+                {comparisonRegions.map((region, index) => (
+                  <Line
+                    key={region.name}
+                    type="natural"
+                    dataKey={region.name}
+                    stroke={linePalette[index % linePalette.length]}
+                    strokeOpacity={0}
+                    strokeWidth={0}
+                    dot={(props) => (
+                      <RegionalBubbleDot
+                        {...props}
+                        isSelected={region.name === selectedRegion.name}
+                        latestQuarter={latestQuarter}
+                      />
+                    )}
+                    activeDot={false}
+                    connectNulls={false}
+                  />
+                ))}
+              </ComposedChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         <p className="regional-source-note">{note}</p>
@@ -253,12 +365,12 @@ export default function RegionalComparisonSection({ data = [], note = '' }) {
 
       <aside className="glass-card regional-ranking-panel">
         <div className="regional-ranking-header">
-          <p className="regional-panel-eyebrow">Latest 2026-Q1 ranking</p>
+          <p className="regional-panel-eyebrow">Latest 2026-Q1 regional ranking</p>
           <h3>{metricMeta.label}</h3>
           <p>
             {fastestGrowth?.changePct == null
               ? 'Growth-rate comparison is not available.'
-              : `Fastest proportional growth since 2025-Q1: ${fastestGrowth.name} (${fastestGrowth.changePct.toFixed(1)}%).`}
+              : `Strongest proportional increase since 2025-Q1: ${fastestGrowth.name} (${fastestGrowth.changePct.toFixed(1)}%).`}
           </p>
         </div>
 

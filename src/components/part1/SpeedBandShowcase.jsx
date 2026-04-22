@@ -1,13 +1,3 @@
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
-
 const categoryConfig = [
   {
     key: 'standard',
@@ -55,9 +45,8 @@ export default function SpeedBandShowcase({ data = [] }) {
   if (!data.length) return null
 
   const latest = data[data.length - 1]
-  const chartData = data.slice(-6)
   const currentSystemNote =
-    'The chart below uses the most recent six quarters, all on the current 3-8, 8-49, 50-149 and 150+ kW bands.'
+    'These four categories are still useful for showing how the public network ranges from slower long-stay charging to time-efficient rapid and ultra-rapid provision.'
 
   return (
     <section className="speed-section glass-card">
@@ -103,75 +92,10 @@ export default function SpeedBandShowcase({ data = [] }) {
 
       <div className="speed-chart-shell">
         <p className="speed-chart-note">
-          Standard charging still makes up the largest share by volume in {latest.quarter}. But rapid and ultra-rapid
-          categories are the clearest signal that the network is becoming more time-efficient for everyday and
-          long-distance use.
+          In {latest.quarter}, standard charging still makes up the largest share by volume, while rapid and
+          ultra-rapid categories represent the most time-efficient part of the network for shorter stops and longer
+          trips.
         </p>
-
-        <div className="speed-chart-card">
-          <div className="speed-chart-area">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="cStd" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b8f97" stopOpacity={0.7} />
-                    <stop offset="95%" stopColor="#8b8f97" stopOpacity={0.15} />
-                  </linearGradient>
-                  <linearGradient id="cPlus" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4f7af2" stopOpacity={0.75} />
-                    <stop offset="95%" stopColor="#4f7af2" stopOpacity={0.15} />
-                  </linearGradient>
-                  <linearGradient id="cRap" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#d18b2f" stopOpacity={0.75} />
-                    <stop offset="95%" stopColor="#d18b2f" stopOpacity={0.15} />
-                  </linearGradient>
-                  <linearGradient id="cUltra" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#c0567a" stopOpacity={0.75} />
-                    <stop offset="95%" stopColor="#c0567a" stopOpacity={0.15} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid stroke="rgba(35,38,45,0.08)" vertical={false} strokeDasharray="4 6" />
-                <XAxis
-                  dataKey="quarter"
-                  stroke="rgba(35,38,45,0.55)"
-                  tick={{ fontSize: 11, fill: 'rgba(35,38,45,0.72)' }}
-                  tickMargin={8}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <YAxis
-                  stroke="rgba(35,38,45,0.55)"
-                  tick={{ fontSize: 11, fill: 'rgba(35,38,45,0.72)' }}
-                  tickMargin={8}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'rgba(248,245,239,0.98)',
-                    border: '1px solid rgba(35,38,45,0.10)',
-                    borderRadius: '8px',
-                    color: '#23262d',
-                    fontSize: '12px',
-                  }}
-                />
-                <Area type="monotone" dataKey="standard" stackId="1" stroke="#8b8f97" fill="url(#cStd)" />
-                <Area type="monotone" dataKey="standardPlus" stackId="1" stroke="#4f7af2" fill="url(#cPlus)" />
-                <Area type="monotone" dataKey="rapid" stackId="1" stroke="#d18b2f" fill="url(#cRap)" />
-                <Area type="monotone" dataKey="ultraRapid" stackId="1" stroke="#c0567a" fill="url(#cUltra)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="speed-chart-legend">
-            {categoryConfig.map((item) => (
-              <span key={item.key} className="speed-chart-legend-item">
-                <i style={{ backgroundColor: item.accent }} />
-                {item.label}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   )
