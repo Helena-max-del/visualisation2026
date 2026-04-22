@@ -546,7 +546,7 @@
 .p2-map-canvas {
   flex: 1;
   min-width: 0;
-  height: 540px;
+  height: 600px;
   border-radius: 14px;
   overflow: hidden;
   border: 1px solid rgba(35, 38, 45, 0.08);
@@ -1005,7 +1005,7 @@
   .part2-city-grid { grid-template-columns: 1fr; }
   .p2-map-body { flex-direction: column; }
   .p2-map-panel { width: 100%; }
-  .p2-map-canvas { height: 420px; }
+  .p2-map-canvas { height: 460px; }
 }
 
 @media (max-width: 760px) {
@@ -1019,6 +1019,204 @@
   .p2-mcard-grid { grid-template-columns: 1fr; }
   .p2-formula { padding: 20px 20px; }
   .p2-formula-row { gap: 12px; }
+}
+
+/* ── City selector tabs ─────────────────────────────────────────────────────*/
+
+.p2-city-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.p2-city-tab {
+  padding: 7px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(35, 38, 45, 0.13);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(8px);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: rgba(35, 38, 45, 0.62);
+  cursor: pointer;
+  transition:
+    background   0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s,
+    color        0.2s,
+    transform    0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow   0.2s;
+  box-shadow: 0 2px 8px rgba(104, 83, 50, 0.07), inset 0 1px 0 rgba(255,255,255,0.80);
+  line-height: 1;
+}
+
+.p2-city-tab:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(35, 38, 45, 0.22);
+  color: #23262d;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(104, 83, 50, 0.12), inset 0 1px 0 rgba(255,255,255,0.90);
+}
+
+.p2-city-tab.is-active {
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(35, 38, 45, 0.22);
+  transform: none;
+}
+
+.p2-city-tab--all.is-active        { background: #23262d; }
+.p2-city-tab--london.is-active     { background: #4f7af2; box-shadow: 0 4px 14px rgba(79,122,242,0.32); }
+.p2-city-tab--birmingham.is-active { background: #d18b2f; box-shadow: 0 4px 14px rgba(209,139,47,0.32); }
+.p2-city-tab--leeds.is-active      { background: #8c62aa; box-shadow: 0 4px 14px rgba(140,98,170,0.32); }
+
+/* ── Area badge (city + geography type pill inside panel) ───────────────────*/
+
+.p2-map-area-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 6px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.p2-map-area-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.7);
+}
+
+/* ── Legend coverage level rows ─────────────────────────────────────────────*/
+
+.p2-map-legend-units {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(35, 38, 45, 0.08);
+}
+
+.p2-map-legend-unit {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10.5px;
+  color: rgba(35, 38, 45, 0.64);
+  font-weight: 600;
+}
+
+.p2-map-legend-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+/* ── Inline coloured dot in map description ─────────────────────────────────*/
+
+.p2-map-inline-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin: 0 1px;
+  vertical-align: middle;
+  border: 1.5px solid rgba(255,255,255,0.70);
+  box-shadow: 0 0 0 1px rgba(35,38,45,0.12);
+}
+
+/* ── Station info badge (city name pill inside panel) ───────────────────────*/
+
+.p2-map-station-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 6px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.p2-map-station-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.7);
+}
+
+/* ── Rapid badge inside panel ───────────────────────────────────────────────*/
+
+.p2-rapid-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(245,166,35,0.14);
+  color: #c47a1a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin-right: 4px;
+}
+
+/* ── Station legend rows (inside panel) ─────────────────────────────────────*/
+
+.p2-stn-legend { margin-top: 2px; }
+
+.p2-stn-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.p2-stn-dot {
+  display: inline-block;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.68);
+  box-shadow: 0 0 0 1px rgba(35,38,45,0.10);
+}
+
+.p2-stn-dot--sm { width: 8px;  height: 8px;  }
+.p2-stn-dot--lg { width: 12px; height: 12px; }
+
+.p2-stn-legend-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(35, 38, 45, 0.68);
+  letter-spacing: 0.02em;
+}
+
+.p2-stn-legend-hint {
+  margin: 0 0 4px;
+  font-size: 10px;
+  color: rgba(35, 38, 45, 0.44);
+  line-height: 1.4;
+}
+
+/* ── Widen panel to fit richer content ───────────────────────────────────────*/
+
+.p2-map-panel { width: 224px; }
+
+@media (max-width: 900px) {
+  .p2-city-tabs  { gap: 6px; }
+  .p2-city-tab   { font-size: 11px; padding: 6px 14px; }
+  .p2-map-panel  { width: 100%; }
 }
 
 /* Premium chart refresh */
