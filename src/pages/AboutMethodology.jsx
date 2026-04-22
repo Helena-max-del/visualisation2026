@@ -1,204 +1,330 @@
-const part1Sources = [
-  'DfT EVCI9001 quarterly national charging-device statistics, January 2015 to January 2026. This supplies the national growth series and the speed-band breakdown used in Part 1.',
-  'DfT EVCI0101 regional and country summaries, January 2025 to January 2026. This supplies the comparable regional overview used in Part 1.',
+// ─────────────────────────────────────────────────────────────────────────────
+// Data
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PARTS = [
+  {
+    number: '01',
+    title: 'Growth',
+    summary:
+      'Tracks how the UK public charging network expanded between 2015 and 2026, how the speed mix shifted toward faster charging, and how regional distribution changed once open-data reporting became mandatory.',
+    accent: 'blue',
+  },
+  {
+    number: '02',
+    title: 'Adequacy',
+    summary:
+      'Measures whether charger supply across London boroughs keeps pace with local EV demand. A bivariate classification cross-tabulates supply and dependence tiers to identify the most constrained areas, extended to Birmingham and Leeds at MSOA level.',
+    accent: 'amber',
+  },
+  {
+    number: '03',
+    title: 'Accessibility Tool',
+    summary:
+      'A resident-facing explorer that estimates drive-time catchments from any postcode or location in London, Leeds, or Birmingham and summarises nearby charging provision, operator mix, and rapid-charging availability.',
+    accent: 'plum',
+  },
 ]
 
-const part1Method = [
-  'The national growth chart is based on quarterly public charging-device counts from DfT. The main total-device series runs from 2015-Q1 to 2026-Q1.',
-  'The current 50kW+ series only becomes available later in the DfT table. Earlier rapid figures use a legacy threshold, so they are not merged directly into the newer 50kW+ line.',
-  'The speed-composition section uses the most recent six quarters, where the DfT speed bands are already on the current 3-8, 8-49, 50-149 and 150+ kW classification.',
-  'The regional comparison uses DfT region summaries from 2025-Q1 onward, because this is the period where regional aggregation becomes more reliable after the Public Charge Point Regulations 2023 open-data requirement.',
+const TEAM = [
+  { name: 'Helena', role: 'Lead developer & data visualisation' },
+  { name: 'Team member 2', role: 'Data pipeline & spatial analysis' },
+  { name: 'Team member 3', role: 'UX design & content writing' },
+  { name: 'Team member 4', role: 'Cartography & Part 3 tool' },
 ]
 
-const part1Limitations = [
-  'These statistics describe public charging devices, not connectors. A single device may support multiple connectors and charging speeds.',
-  'Counts represent devices reported operational at the start of each quarter, so short-term outages and reporting delays are not visible here.',
-  'The definition change from a legacy rapid threshold to the current 50kW+ threshold means long-run fast-charging comparisons must be made carefully.',
-  'Regional comparison is informative for broad spatial patterns, but it still hides substantial variation within regions and between local authorities.',
+const ALL_SOURCES = [
+  {
+    part: 'Part 1',
+    name: 'DfT EVCI9001',
+    description: 'Quarterly national charging-device statistics, 2015–2026. National growth series and speed-band breakdown.',
+  },
+  {
+    part: 'Part 1',
+    name: 'DfT EVCI0101',
+    description: 'Regional and country summaries, 2025–2026. Comparable regional overview.',
+  },
+  {
+    part: 'Part 2',
+    name: 'DfT EVCI local-authority table',
+    description: 'Total and 50 kW+ rapid charger counts per London borough, January 2026.',
+  },
+  {
+    part: 'Part 2',
+    name: 'DfT VEH0142',
+    description: 'Licensed plug-in vehicle stocks (BEV + PHEV) by local authority, 2025 Q3.',
+  },
+  {
+    part: 'Part 2',
+    name: 'ONS Census 2021 (TS045)',
+    description: 'Car or van availability. No-car household share per borough and MSOA.',
+  },
+  {
+    part: 'Part 2',
+    name: 'ONS Open Geography Portal',
+    description: 'MSOA 2021 boundaries (BFE) for Birmingham and Leeds via ArcGIS FeatureServer.',
+  },
+  {
+    part: 'Part 2 / Part 1',
+    name: 'OpenStreetMap (Overpass)',
+    description: 'Public charging-station point locations for London, Birmingham, and Leeds.',
+  },
+  {
+    part: 'Part 3',
+    name: 'Open Charge Map API',
+    description: 'Charging-point locations, operator names, power outputs, connector types, and status metadata.',
+  },
 ]
 
-const part1Transparency = [
-  'This site uses processed copies of the original DfT tables so that the browser only loads the fields required for the narrative and interactions.',
-  'AI-assisted coding support was used during interface prototyping, code refactoring, and debugging. Final data choices, metric definitions, and wording were checked back against the source tables before publishing.',
-  'The final project info file submitted with the coursework should still include the agreed group-contributions table and the final AI-use wording approved by the team.',
+const TECH = [
+  'React 18', 'Vite', 'React Router', 'Mapbox GL JS',
+  'D3.js', 'CSS (vanilla)', 'Python · geopandas', 'NOMIS API', 'ONS Open Geography',
 ]
 
-const part2Sources = [
-  'DfT EVCI local-authority charging table (January 2026), providing total public charger counts and 50 kW+ rapid charger counts for each London borough, used as the core supply-side input.',
-  'DfT VEH0142 plug-in vehicle statistics (2025 Q3), providing licensed plug-in vehicle stocks (BEV + PHEV) by local authority, used to quantify localised demand.',
-  'ONS Census 2021 (TS045 car availability table), providing the share of no-car households per borough, used to construct the public-charging dependence proxy in the bivariate classification.',
-]
+// ─────────────────────────────────────────────────────────────────────────────
+// Sub-components
+// ─────────────────────────────────────────────────────────────────────────────
 
-const part2Method = [
-  'Adequacy indicators are expressed as chargers per 1,000 locally licensed plug-in vehicles, rather than per capita, so that rankings reflect whether supply is keeping pace with local EV adoption rather than simply residential density.',
-  'The same normalisation is applied separately to rapid chargers (50 kW+) to identify whether fast-charging supply follows a different spatial logic from overall provision.',
-  "A rank-shift measure is computed as the absolute difference in each borough's position between the total and rapid adequacy rankings. Large shifts indicate boroughs where the composition of the network diverges structurally from its overall scale.",
-  "A rapid-share metric, defined as the proportion of each borough's public chargers that are rapid, is derived to measure the speed orientation of each local network independently of its size.",
-]
-
-const part2Bivariate = [
-  'The supply dimension uses total public chargers per 10,000 residents; the demand dimension uses the no-car household share as a proxy for public-charging dependence.',
-  'Both variables are independently divided into terciles based on the London-wide distribution, producing a 3 x 3 matrix of nine classes.',
-  'The deep purple cell (class 3-1) identifies boroughs with high demand and low supply, interpreted as the most constrained cases.',
-  "The bivariate map is implemented in Mapbox GL JS, with borough boundaries loaded as GeoJSON and colours applied dynamically via a Mapbox match expression. Hover interactions expose each borough's supply tier, demand tier, and full indicator values.",
-]
-
-const part2Transparency = [
-  'All indicators in this section are derived from publicly released DfT and ONS source tables. The full calculation logic is retained in the front-end codebase and can be independently verified.',
-  'Data processing and indicator computation are built in React, with useMemo used to cache sorted rankings and keep the interactive views responsive.',
-  'AI-assisted support was used during interface prototyping and code debugging. All final metric definitions and data selections were checked against the original source tables before publication.',
-]
-
-const part3Sources = [
-  'Open Charge Map API data was used as the primary source of charger point locations and charger metadata.',
-  'The dataset provides charger coordinates, operator names, charging power outputs, connector types, status fields where available, and some pricing or usage-related metadata.',
-  'UK local-authority boundary data from the Office for National Statistics Open Geography Portal was used to spatially clip and filter charger locations to London, Leeds, and Birmingham.',
-]
-
-const part3Method = [
-  'Charger point data was collected through the Open Charge Map API using city-based geographic queries and converted into GeoJSON format for web-based visualisation.',
-  'Spatial filtering was applied using local-authority boundary geometries to isolate charging infrastructure within the three study cities.',
-  'The tool methodology is built around an interactive web map designed to estimate approximate 5-, 10-, and 15-minute driving catchments based on configurable average travel speeds.',
-  'Users can click on the map or search for a postcode or place name to explore nearby charging accessibility, while rapid-capable chargers can be filtered separately to compare faster-charging access patterns.',
-  'The interface calculates nearby charger counts, nearest charging points, and operator distributions within the selected catchment area.',
-]
-
-const part3Features = [
-  'Interactive city selection between London, Leeds, and Birmingham.',
-  'Search functionality using postcode or place-name lookup.',
-  'Dynamic drive-time accessibility estimation using adjustable travel speeds.',
-  'Interactive catchment visualisation using multi-ring accessibility buffers.',
-  'Rapid charger filtering for fast-charging accessibility analysis.',
-  'Popup information panels displaying charger-level metadata such as operator, charging speed, and availability-related information.',
-  'Real-time summary panels showing nearby charger density and accessibility indicators.',
-]
-
-const part3Limitations = [
-  'Open Charge Map is a crowd-sourced dataset, meaning spatial coverage may vary between cities and neighbourhoods.',
-  'Some charging stations may be missing or incompletely recorded, particularly in lower-contribution areas.',
-  'Charger status and pricing information are not consistently available across all operators and locations.',
-  'The accessibility model uses simplified straight-line distance estimation rather than full road-network routing, so travel times are approximate rather than exact driving durations.',
-  'Differences in operator reporting standards may affect consistency in charging-speed classifications and metadata completeness.',
-  'The tool focuses on public charging infrastructure only and does not include private residential or workplace chargers.',
-]
-
-const part3Transparency = [
-  'All charger-point data used in the explorer is derived from publicly accessible Open Charge Map API services.',
-  'Processed GeoJSON datasets were generated to optimise browser performance and reduce unnecessary API calls during interaction.',
-  'The methodology and preprocessing workflow are designed to remain transparent and reproducible for future extension or comparison studies.',
-  'The project explicitly communicates uncertainty around crowd-sourced data completeness and accessibility estimation.',
-]
-
-function BulletCard({ title, items, full = false }) {
+function PartCard({ number, title, summary, accent }) {
   return (
-    <article className={`about-card${full ? ' about-card--full' : ''}`}>
+    <article className={`about-part-card about-part-card--${accent}`}>
+      <span className="about-part-number">{number}</span>
       <h3>{title}</h3>
-      <ul>
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
+      <p>{summary}</p>
     </article>
   )
 }
 
-function ParagraphCard({ title, paragraphs, full = false }) {
+function TeamCard({ name, role }) {
   return (
-    <article className={`about-card${full ? ' about-card--full' : ''}`}>
-      <h3>{title}</h3>
-      {paragraphs.map((paragraph) => (
-        <p key={paragraph}>{paragraph}</p>
-      ))}
-    </article>
-  )
-}
-
-function MethodSection({ eyebrow, title, intro, children }) {
-  return (
-    <section className="about-section">
-      <div className="about-section__header">
-        <p className="about-eyebrow">{eyebrow}</p>
-        <h2>{title}</h2>
-        <p>{intro}</p>
+    <div className="about-team-card">
+      <div className="about-team-avatar">{name[0]}</div>
+      <div>
+        <strong>{name}</strong>
+        <span>{role}</span>
       </div>
-      <div className="about-grid">{children}</div>
-    </section>
+    </div>
   )
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Page
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function AboutMethodology() {
   return (
-    <section className="about-page">
+    <div className="about-page">
       <div className="about-shell">
-        <div className="about-heading">
-          <p className="about-eyebrow">Methodology</p>
-          <h1>How the project was built</h1>
+
+        {/* ── Hero ── */}
+        <header className="about-heading">
+          <p className="about-eyebrow">UCL CASA · CEGE0029 Urban Visualisation · 2026</p>
+          <h1>About This Project</h1>
           <p>
-            This page is the project methodology summary requested in the coursework guidance.
-            It brings together the logic, data sources, and transparency notes for the three
-            main sections of the site so the narrative, indicators, and tools can be read as
-            one coherent workflow.
+            <em>Am I Ready for an EV?</em> is a group data-visualisation project exploring the
+            growth, spatial adequacy, and neighbourhood accessibility of the UK's public
+            electric vehicle charging network. It was produced as part of the CEGE0029 module
+            at the Centre for Advanced Spatial Analysis, University College London.
           </p>
-        </div>
+        </header>
 
-        <MethodSection
-          eyebrow="Part 1"
-          title="How Part 1 was built"
-          intro="Part 1 establishes the national and regional growth story: how quickly the UK public charging network has grown, how much of that growth has shifted towards faster charging, and how regional comparison only becomes meaningfully comparable once the DfT regional series stabilises from 2025 onward."
-        >
-          <ParagraphCard
-            title="Research focus"
-            paragraphs={[
-              'The opening section asks how quickly the UK public EV charging network has expanded, how far that growth has shifted towards faster charging, and whether headline expansion begins to translate into more geographically distributed provision.',
-              'The structure moves from national growth, to charging-speed composition, to a regional overview. That progression establishes the broad context before the later sections move down to borough and neighbourhood scales.',
-            ]}
-          />
+        {/* ── Three-part overview ── */}
+        <section className="about-section">
+          <div className="about-section__header">
+            <p className="about-eyebrow">Project structure</p>
+            <h2>Three interconnected questions</h2>
+            <p>
+              The site moves from national scale to borough scale to neighbourhood scale,
+              with each part building on the previous one.
+            </p>
+          </div>
+          <div className="about-parts-grid">
+            {PARTS.map((p) => (
+              <PartCard key={p.number} {...p} />
+            ))}
+          </div>
+        </section>
 
-          <BulletCard title="Part 1 data sources" items={part1Sources} />
-          <BulletCard title="Method for Part 1" items={part1Method} full />
-          <BulletCard title="Limitations" items={part1Limitations} />
-          <BulletCard title="Open science and transparency" items={part1Transparency} />
-        </MethodSection>
+        {/* ── Team ── */}
+        <section className="about-section">
+          <div className="about-section__header">
+            <p className="about-eyebrow">Contributors</p>
+            <h2>Team</h2>
+          </div>
+          <div className="about-team-grid">
+            {TEAM.map((m) => (
+              <TeamCard key={m.name} {...m} />
+            ))}
+          </div>
+        </section>
 
-        <MethodSection
-          eyebrow="Part 2"
-          title="How Part 2 was built"
-          intro="This methodology note covers the data sources used in Part 2, the construction logic behind the adequacy indicators, the technical implementation of the bivariate classification, and the main transparency notes attached to the borough-level analysis."
-        >
-          <ParagraphCard
-            title="Research focus"
-            paragraphs={[
-              'Part 2 asks whether the public charging supply across London boroughs genuinely matches local electric vehicle demand. Against a backdrop of overall network expansion, the question is which boroughs, especially those whose residents depend most on public charging, still face a meaningful undersupply.',
-              'The analysis moves from overall adequacy rankings, to the spatial distribution of rapid charging provision, to a bivariate mapping of supply-demand alignment. This layered structure is designed to address the central question: does growth in headline numbers translate into equitable access?',
-            ]}
-          />
+        {/* ── Methodology ── */}
+        <section className="about-section">
+          <div className="about-section__header">
+            <p className="about-eyebrow">Methodology</p>
+            <h2>How the project was built</h2>
+            <p>
+              This section provides the full analytical methodology across all three parts of
+              the site, covering data sources, indicator construction, spatial techniques, and
+              transparency notes.
+            </p>
+          </div>
 
-          <BulletCard title="Part 2 data sources" items={part2Sources} />
-          <BulletCard title="Method for Part 2" items={part2Method} full />
-          <BulletCard title="Bivariate spatial classification" items={part2Bivariate} full />
-          <BulletCard title="Open science and transparency" items={part2Transparency} />
-        </MethodSection>
+          <div className="about-method-body">
+            <h3>Research framing</h3>
+            <p>
+              This project asks a question that sits at the intersection of infrastructure
+              planning and spatial equity: does the rapid expansion of the UK's public EV
+              charging network translate into equitable access for all urban residents? The
+              analysis is structured in three parts, each addressing a different scale and
+              type of question, together forming a sequential narrative from national growth
+              to borough-level adequacy to neighbourhood-level accessibility.
+            </p>
 
-        <MethodSection
-          eyebrow="Part 3"
-          title="How Part 3 was built"
-          intro="Part 3 documents the accessibility-explorer workflow prepared for the city-scale tool, covering the point-data source, spatial filtering approach, interaction design, limitations, and transparency notes for the neighbourhood-facing component."
-        >
-          <ParagraphCard
-            title="Research focus"
-            paragraphs={[
-              'Part 3 was designed as a user-facing exploratory tool that allows residents to investigate the accessibility of public EV charging infrastructure in London, Leeds, and Birmingham.',
-              'The section focuses on how charging availability changes across neighbourhoods, how quickly users can access nearby chargers, and whether access differs between urban areas. The interface combines interactive mapping, approximate drive-time catchments, and charger-level information to create a practical accessibility exploration experience for everyday users.',
-            ]}
-          />
+            <h3>Part 1 — National growth analysis</h3>
+            <p>
+              The first part establishes the macro-level context. Using quarterly
+              charging-device counts released by the Department for Transport (DfT
+              EVCI9001), we tracked the total number of public charging devices in operation
+              from 2015 to early 2026. This series captures the doubling and re-doubling of
+              network scale over a decade, but the headline count alone is insufficient: the
+              compositional shift towards faster charging matters as much as total volume.
+            </p>
+            <p>
+              To capture this, the analysis uses the DfT's current speed classification —
+              grouping devices into 3–8 kW, 8–49 kW, 50–149 kW, and 150 kW+ bands — for
+              the most recent six quarters, where the classification is internally consistent.
+              Earlier periods used a different rapid threshold, so they are not merged
+              directly into the current speed-band breakdown. Regional comparison draws on
+              DfT's regional summaries from 2025-Q1 onward, where the Public Charge Point
+              Regulations 2023 open-data requirement makes regional aggregation meaningfully
+              comparable for the first time.
+            </p>
 
-          <BulletCard title="Part 3 data sources" items={part3Sources} />
-          <BulletCard title="Method for Part 3" items={part3Method} full />
-          <BulletCard title="User interaction features" items={part3Features} />
-          <BulletCard title="Limitations" items={part3Limitations} />
-          <BulletCard title="Open science and transparency" items={part3Transparency} full />
-        </MethodSection>
+            <h3>Part 2 — Borough-level adequacy</h3>
+            <p>
+              The second part moves from national trends to spatial adequacy within London.
+              The central indicator is chargers per 1,000 locally licensed plug-in vehicles,
+              derived from DfT's local-authority charging table (January 2026) and DfT's
+              plug-in vehicle statistics (2025 Q3). Normalising supply by local EV adoption
+              rather than by population ensures that rankings reflect whether supply is keeping
+              pace with where EVs are actually registered, not simply where people live.
+            </p>
+            <p>
+              The analysis separates total chargers from rapid chargers (50 kW+) because
+              the spatial logic of fast-charging provision may differ from overall provision.
+              A rank-shift measure — the absolute difference in each borough's position
+              between the total and rapid rankings — identifies structural divergences in
+              network composition. A rapid-share metric, defined as the proportion of public
+              chargers rated 50 kW or above, is derived independently to measure the speed
+              orientation of each local network.
+            </p>
+            <p>
+              The central visualisation is a bivariate classification that cross-tabulates
+              two independent dimensions: supply (chargers per 10,000 residents) and demand
+              (no-car household share from ONS Census 2021). The no-car household share is
+              used as a proxy for public-charging dependence, on the premise that households
+              without a private vehicle are more likely to rely on public infrastructure for
+              EV use, or to consider it a precondition for EV adoption. Both variables are
+              independently divided into terciles based on the London-wide distribution,
+              producing a 3×3 matrix of nine classes. Boroughs in the high-demand, low-supply
+              cell (class 3-1) are identified as the most structurally constrained: high
+              public dependence combined with the thinnest provision.
+            </p>
+            <p>
+              The bivariate map is implemented in Mapbox GL JS with borough boundaries loaded
+              as GeoJSON and colours applied via data-driven match expressions. The same
+              classification is extended to Birmingham and Leeds using MSOA-level boundaries
+              from the ONS Open Geography Portal and no-car household data from NOMIS, with
+              supply estimated from OpenStreetMap charging-point geometries matched to each
+              MSOA via a two-pass spatial join: strict containment first, then a nearest-MSOA
+              fallback for points within approximately 400 m of a boundary.
+            </p>
+
+            <h3>Part 3 — Neighbourhood accessibility tool</h3>
+            <p>
+              The third part translates the borough-scale findings into a resident-facing
+              exploration tool. Charging-point data was collected from the Open Charge Map
+              API, converted to GeoJSON, and spatially filtered using local-authority boundary
+              geometries to cover London, Leeds, and Birmingham. The tool allows users to
+              select a location by postcode or place-name search and then estimates approximate
+              5-, 10-, and 15-minute driving catchments based on configurable average travel
+              speeds. Within each catchment, the tool calculates nearby charger counts,
+              identifies the nearest charging points, and summarises operator distributions.
+              A rapid-filter option allows users to compare fast-charging accessibility
+              independently of overall provision.
+            </p>
+            <p>
+              The accessibility model uses simplified straight-line buffers rather than
+              full road-network routing, which means travel times are approximations rather
+              than exact driving durations. This is a deliberate design choice that prioritises
+              responsiveness and broad usability over routing precision: for initial
+              neighbourhood-scale exploration, euclidean buffers are a reasonable
+              first-order estimate of reach.
+            </p>
+
+            <h3>Limitations and transparency</h3>
+            <p>
+              Several limitations apply across all three parts. DfT statistics count devices,
+              not connectors, so a single multi-connector unit may support several simultaneous
+              users but appears as one device in the data. Regional and borough patterns
+              reflect recorded public infrastructure only — workplace and residential private
+              chargers are excluded throughout. The Open Charge Map dataset is crowd-sourced,
+              meaning coverage varies between cities and may undercount emerging or
+              less-reported areas. The no-car household proxy for demand is an approximation:
+              some no-car households have no interest in EVs, and some car-owning households
+              may rely heavily on public charging in areas with limited home-charging options.
+            </p>
+            <p>
+              All source data used in this project is publicly available from DfT, ONS,
+              NOMIS, the ONS Open Geography Portal, and Open Charge Map. The full indicator
+              calculations are retained in the front-end codebase and can be independently
+              verified. AI-assisted tools were used during interface prototyping, code
+              refactoring, and debugging. All final data selections, metric definitions, and
+              published wording were checked against the original source tables before
+              publication. The agreed group-contributions table and final AI-use declaration
+              are included in the coursework submission.
+            </p>
+          </div>
+        </section>
+
+        {/* ── Data sources ── */}
+        <section className="about-section">
+          <div className="about-section__header">
+            <p className="about-eyebrow">Data</p>
+            <h2>Data sources</h2>
+            <p>All datasets used in this project are publicly available.</p>
+          </div>
+          <div className="about-sources-table">
+            <div className="about-sources-head">
+              <span>Part</span>
+              <span>Dataset</span>
+              <span>Used for</span>
+            </div>
+            {ALL_SOURCES.map((s) => (
+              <div className="about-sources-row" key={s.name}>
+                <span className="about-sources-part">{s.part}</span>
+                <strong>{s.name}</strong>
+                <span>{s.description}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Tech stack ── */}
+        <section className="about-section">
+          <div className="about-section__header">
+            <p className="about-eyebrow">Stack</p>
+            <h2>Tools &amp; technologies</h2>
+          </div>
+          <div className="about-tech-chips">
+            {TECH.map((t) => (
+              <span key={t} className="about-tech-chip">{t}</span>
+            ))}
+          </div>
+        </section>
+
       </div>
-    </section>
+    </div>
   )
 }

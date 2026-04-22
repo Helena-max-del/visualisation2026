@@ -7,16 +7,13 @@
   position: relative;
   min-height: calc(100vh - 84px);
   overflow: hidden;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(88, 132, 223, 0.14), transparent 20%),
-    radial-gradient(circle at 80% 72%, rgba(191, 145, 72, 0.16), transparent 20%),
-    linear-gradient(180deg, #ebe4d8 0%, #e5ddcf 100%);
+  background: #060810;
 }
 
 .overview-intro-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(235, 228, 216, 0.96), rgba(235, 228, 216, 0.74) 38%, rgba(235, 228, 216, 0.30) 68%, rgba(235, 228, 216, 0.06));
+  background: linear-gradient(to right, rgba(6, 8, 16, 0.94), rgba(6, 8, 16, 0.72) 38%, rgba(6, 8, 16, 0.25) 68%, rgba(6, 8, 16, 0.00));
   z-index: 2;
 }
 
@@ -38,13 +35,13 @@
   font-size: 12px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: rgba(35, 38, 45, 0.52);
+  color: rgba(160, 185, 240, 0.60);
   font-weight: 700;
 }
 
 .overview-intro-title {
   margin: 0;
-  color: #23262d;
+  color: #e4eaf8;
   font-size: clamp(72px, 10vw, 142px);
   line-height: 0.88;
   letter-spacing: -0.07em;
@@ -52,7 +49,7 @@
 }
 
 .overview-intro-title span {
-  color: #4f7af2;
+  color: #6499ff;
 }
 
 .overview-intro-copy {
@@ -60,20 +57,20 @@
   max-width: 650px;
   font-size: clamp(18px, 1.6vw, 22px);
   line-height: 1.8;
-  color: rgba(35, 38, 45, 0.74);
+  color: rgba(190, 205, 240, 0.70);
 }
 
 .overview-intro-button {
   padding: 14px 24px;
   border-radius: 999px;
-  border: 1px solid rgba(35, 38, 45, 0.12);
-  background: rgba(255, 255, 255, 0.66);
-  color: #23262d;
+  border: 1px solid rgba(140, 175, 255, 0.22);
+  background: rgba(255, 255, 255, 0.07);
+  color: #dce6f8;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   backdrop-filter: blur(8px);
-  box-shadow: 0 18px 44px rgba(87, 71, 44, 0.10);
+  box-shadow: 0 18px 44px rgba(20, 40, 100, 0.28);
 }
 
 .overview-hero-panel {
