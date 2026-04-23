@@ -15,7 +15,7 @@ export function usePart2Data() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    loadText('/data/part2/borough_chargers.csv')
+    loadText(`${import.meta.env.BASE_URL}data/part2/borough_chargers.csv`)
       .then((text) => {
         const rows = parseCsv(text).map((row) => ({
           code: row.code,

@@ -6,7 +6,7 @@ const CITY_CONFIGS = [
   {
     id: 'london',
     name: 'London',
-    dataPath: '/data/part1/london_charging_osm.geojson',
+    dataPath: `${import.meta.env.BASE_URL}data/part1/london_charging_osm.geojson`,
     accent: 'blue',
     insight:
       'London combines the densest mapped network in this three-city comparison with pronounced borough-level contrasts, which is why adequacy matters here.',
@@ -15,7 +15,7 @@ const CITY_CONFIGS = [
   {
     id: 'birmingham',
     name: 'Birmingham',
-    dataPath: '/data/part1/birmingham_charging_osm.geojson',
+    dataPath: `${import.meta.env.BASE_URL}data/part1/birmingham_charging_osm.geojson`,
     accent: 'amber',
     insight:
       'Birmingham appears more corridor-led and dispersed in the Part 1 map pattern, suggesting that citywide coverage and strategic road access may matter more than borough-style clustering.',
@@ -24,7 +24,7 @@ const CITY_CONFIGS = [
   {
     id: 'leeds',
     name: 'Leeds',
-    dataPath: '/data/part1/leeds_charging_osm.geojson',
+    dataPath: `${import.meta.env.BASE_URL}data/part1/leeds_charging_osm.geojson`,
     accent: 'plum',
     insight:
       'Leeds sits between the two in this comparison: less saturated than London, but still structured around centre-ring-road and destination clusters rather than a uniformly dense network.',

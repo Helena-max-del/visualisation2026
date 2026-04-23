@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom'
 import ParticleEVHero from '../components/common/ParticleEVHero'
 
+const B = import.meta.env.BASE_URL
+
 const sectionCards = [
   {
     number: '01',
     title: 'Part 1 | Growth',
     description:
       'Track how the UK public charging network has expanded over time and how the speed mix has changed.',
-    image: '/assets/overview/overview-growth.png',
+    image: `${B}assets/overview/overview-growth.png`,
     to: '/part1',
   },
   {
@@ -15,7 +17,7 @@ const sectionCards = [
     title: 'Part 2 | Adequacy',
     description:
       'Compare charger supply with likely local dependence on public infrastructure at borough and city scale.',
-    image: '/assets/overview/overview-adequacy.png',
+    image: `${B}assets/overview/overview-adequacy.png`,
     to: '/part2',
   },
   {
@@ -23,7 +25,7 @@ const sectionCards = [
     title: 'Part 3 | Tool',
     description:
       'Translate the findings into a resident-facing interface for checking local charging accessibility.',
-    image: '/assets/overview/overview-tool.png',
+    image: `${B}assets/overview/overview-tool.png`,
     to: '/part3',
   },
 ]

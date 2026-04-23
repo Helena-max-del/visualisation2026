@@ -26,10 +26,12 @@ const PARTS = [
   },
 ]
 
+const B = import.meta.env.BASE_URL
+
 const TEAM = [
-  { name: 'XINLEI SHI', photo: '/assets/team/xinlei-shi.jpg' },
-  { name: 'PENGHE GAO', photo: '/assets/team/penghe-gao.jpg' },
-  { name: 'JIAHUI LI', photo: '/assets/team/jiahui-li.jpg' },
+  { name: 'XINLEI SHI', photo: `${B}assets/team/xinlei-shi.jpg` },
+  { name: 'PENGHE GAO', photo: `${B}assets/team/penghe-gao.jpg` },
+  { name: 'JIAHUI LI', photo: `${B}assets/team/jiahui-li.jpg` },
 ]
 
 const ALL_SOURCES = [

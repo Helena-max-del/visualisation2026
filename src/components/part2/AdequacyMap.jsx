@@ -213,8 +213,8 @@ export default function AdequacyMap() {
       let leedsStations = null
       try {
         const [bRaw, lRaw] = await Promise.all([
-          loadJson('/data/part1/birmingham_charging_osm.geojson'),
-          loadJson('/data/part1/leeds_charging_osm.geojson'),
+          loadJson(`${import.meta.env.BASE_URL}data/part1/birmingham_charging_osm.geojson`),
+          loadJson(`${import.meta.env.BASE_URL}data/part1/leeds_charging_osm.geojson`),
         ])
         bhamStations  = enrichStations(bRaw)
         leedsStations = enrichStations(lRaw)
@@ -226,18 +226,18 @@ export default function AdequacyMap() {
       // London
       map.addSource('boroughs', {
         type: 'geojson',
-        data: '/data/part2/bivariate_boroughs.geojson',
+        data: `${import.meta.env.BASE_URL}data/part2/bivariate_boroughs.geojson`,
         generateId: true,
       })
       // Birmingham & Leeds bivariate MSOA
       map.addSource('bham-msoa', {
         type: 'geojson',
-        data: '/data/part2/birmingham_msoa_bivariate.geojson',
+        data: `${import.meta.env.BASE_URL}data/part2/birmingham_msoa_bivariate.geojson`,
         generateId: true,
       })
       map.addSource('leeds-msoa', {
         type: 'geojson',
-        data: '/data/part2/leeds_msoa_bivariate.geojson',
+        data: `${import.meta.env.BASE_URL}data/part2/leeds_msoa_bivariate.geojson`,
         generateId: true,
       })
       // Individual station points (overlaid at high zoom)

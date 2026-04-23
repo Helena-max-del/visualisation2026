@@ -103,7 +103,7 @@ export default function Part1Real() {
         title: 'Early policy support',
         description:
           'Early government support helped establish the public charging market, but provision was still limited and uneven across the country.',
-        image: '/assets/part1/policy-2017.png',
+        image: `${import.meta.env.BASE_URL}assets/part1/policy-2017.png`,
         quarterKey: '2017-Q1',
       },
       {
@@ -111,7 +111,7 @@ export default function Part1Real() {
         title: 'Rapid corridor focus',
         description:
           'Attention shifts towards strategic road corridors and faster charging, making longer EV trips more realistic beyond city centres.',
-        image: '/assets/part1/policy-2019.png',
+        image: `${import.meta.env.BASE_URL}assets/part1/policy-2019.png`,
         quarterKey: '2019-Q4',
       },
       {
@@ -119,7 +119,7 @@ export default function Part1Real() {
         title: 'Local EV Infrastructure (LEVI)',
         description:
           'Local authorities gain stronger support for neighbourhood charging, especially for households that cannot rely on private driveways.',
-        image: '/assets/part1/policy-2022.png',
+        image: `${import.meta.env.BASE_URL}assets/part1/policy-2022.png`,
         quarterKey: '2022-Q4',
       },
       {
@@ -127,7 +127,7 @@ export default function Part1Real() {
         title: 'Mandate acceleration',
         description:
           'The ZEV mandate strengthens expectations for rapid scale-up, linking public charging readiness to a wider industrial EV transition.',
-        image: '/assets/part1/policy-2024.png',
+        image: `${import.meta.env.BASE_URL}assets/part1/policy-2024.png`,
         quarterKey: '2024-Q1',
       },
     ]

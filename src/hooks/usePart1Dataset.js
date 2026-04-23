@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { loadJson } from '../utils/loadData'
 
-const part1Path = '/data/part1/part1_evci9001_processed.json'
-const regionalPath = '/data/part1/uk_regional_growth.json'
+const part1Path = `${import.meta.env.BASE_URL}data/part1/part1_evci9001_processed.json`
+const regionalPath = `${import.meta.env.BASE_URL}data/part1/uk_regional_growth.json`
 
 const toNumber = (value) => {
   if (value == null || value === '') return null

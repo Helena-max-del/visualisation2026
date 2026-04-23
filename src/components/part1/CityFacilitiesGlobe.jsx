@@ -37,7 +37,7 @@ const cityConfigs = [
     center: [-0.1276, 51.5072],
     focusZoom: 15.1,
     cinematicBearing: -10,
-    dataPath: '/data/part1/london_charging_osm.geojson',
+    dataPath: `${import.meta.env.BASE_URL}data/part1/london_charging_osm.geojson`,
     summary:
       'London has the densest mapped charging network, with visible clusters around inner-city destinations, major roads, and borough town centres.',
   },
@@ -47,7 +47,7 @@ const cityConfigs = [
     center: [-1.8904, 52.4862],
     focusZoom: 14.8,
     cinematicBearing: 8,
-    dataPath: '/data/part1/birmingham_charging_osm.geojson',
+    dataPath: `${import.meta.env.BASE_URL}data/part1/birmingham_charging_osm.geojson`,
     summary:
       'Birmingham shows a dispersed charging network across the city centre, major retail parks, and strategic road corridors, reflecting its role as the UK\'s second-largest city.',
   },
@@ -57,7 +57,7 @@ const cityConfigs = [
     center: [-1.5491, 53.8008],
     focusZoom: 14.9,
     cinematicBearing: 12,
-    dataPath: '/data/part1/leeds_charging_osm.geojson',
+    dataPath: `${import.meta.env.BASE_URL}data/part1/leeds_charging_osm.geojson`,
     summary:
       'Leeds sits between the two cases, with charging points spread across the centre, ring-road corridors, and retail or destination clusters.',
   },

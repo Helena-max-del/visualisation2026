@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react'
 import { loadJson } from '../utils/loadData'
 
+const B = import.meta.env.BASE_URL
+
 export const PART3_CITY_CONFIGS = [
   {
     id: 'london',
     label: 'London',
     dataPaths: [
-      '/data/part3/json/london_ne_ocm.json',
-      '/data/part3/json/london_nw_ocm.json',
-      '/data/part3/json/london_se_ocm.json',
-      '/data/part3/json/london_sw_ocm.json',
-      '/data/part3/json/london_west_n_ocm.json',
-      '/data/part3/json/london_west_s_ocm.json',
-      '/data/part3/json/london_central_ocm.json',
-      '/data/part3/json/london_hyde_park_ocm.json',
+      `${B}data/part3/json/london_ne_ocm.json`,
+      `${B}data/part3/json/london_nw_ocm.json`,
+      `${B}data/part3/json/london_se_ocm.json`,
+      `${B}data/part3/json/london_sw_ocm.json`,
+      `${B}data/part3/json/london_west_n_ocm.json`,
+      `${B}data/part3/json/london_west_s_ocm.json`,
+      `${B}data/part3/json/london_central_ocm.json`,
+      `${B}data/part3/json/london_hyde_park_ocm.json`,
     ],
     description:
       'A dense metropolitan case where neighbourhood charging, curbside provision, and rapid fallback all matter at once.',
@@ -21,14 +23,14 @@ export const PART3_CITY_CONFIGS = [
   {
     id: 'leeds',
     label: 'Leeds',
-    dataPaths: ['/data/part3/json/leeds_ocm.json'],
+    dataPaths: [`${B}data/part3/json/leeds_ocm.json`],
     description:
       'A more intermediate network structure, useful for exploring how local chargers and destination hubs combine.',
   },
   {
     id: 'birmingham',
     label: 'Birmingham',
-    dataPaths: ['/data/part3/json/birmingham_ocm.json'],
+    dataPaths: [`${B}data/part3/json/birmingham_ocm.json`],
     description:
       'A polycentric urban case where corridor access and local neighbourhood availability need to be read together.',
   },
