@@ -20,6 +20,13 @@ const OVERVIEW_PRESENTATION_VIEW = {
   bearing: 0,
 }
 
+const INITIAL_OVERVIEW_CAMERA = {
+  center: OVERVIEW_VIEW.center,
+  zoom: OVERVIEW_VIEW.zoom - 0.9,
+  pitch: 0,
+  bearing: -10,
+}
+
 const AUTO_TOUR_START_DELAY_MS = 2600
 const AUTO_TOUR_STEP_MS = 5200
 
@@ -28,7 +35,7 @@ const cityConfigs = [
     id: 'london',
     name: 'London',
     center: [-0.1276, 51.5072],
-    focusZoom: 14.2,
+    focusZoom: 15.1,
     cinematicBearing: -10,
     dataPath: '/data/part1/london_charging_osm.geojson',
     summary:
@@ -38,7 +45,7 @@ const cityConfigs = [
     id: 'birmingham',
     name: 'Birmingham',
     center: [-1.8904, 52.4862],
-    focusZoom: 13.9,
+    focusZoom: 14.8,
     cinematicBearing: 8,
     dataPath: '/data/part1/birmingham_charging_osm.geojson',
     summary:
@@ -48,7 +55,7 @@ const cityConfigs = [
     id: 'leeds',
     name: 'Leeds',
     center: [-1.5491, 53.8008],
-    focusZoom: 14.0,
+    focusZoom: 14.9,
     cinematicBearing: 12,
     dataPath: '/data/part1/leeds_charging_osm.geojson',
     summary:
@@ -179,6 +186,7 @@ export default function CityFacilitiesGlobe() {
   const introTimeoutRef = useRef(null)
   const autoTourTimeoutRef = useRef(null)
   const introArmedRef = useRef(true)
+  const manualOverviewResetRef = useRef(false)
   const autoTourStartedRef = useRef(false)
   const autoTourIndexRef = useRef(0)
   const userInteractedRef = useRef(false)
@@ -268,12 +276,12 @@ export default function CityFacilitiesGlobe() {
 
     map.flyTo({
       center: city.center,
-      zoom: city.focusZoom || 13.2,
-      pitch: 12,
-      bearing: city.cinematicBearing ? city.cinematicBearing * 0.35 : 0,
-      curve: 1.7,
-      speed: 0.52,
-      duration: 2600,
+      zoom: city.focusZoom || 14.8,
+      pitch: city.id === 'london' ? 48 : 44,
+      bearing: city.cinematicBearing || 0,
+      curve: 1.58,
+      speed: 0.72,
+      duration: 2200,
       essential: true,
     })
   }
@@ -281,16 +289,44 @@ export default function CityFacilitiesGlobe() {
   const requestCityFocus = (cityId) => {
     userInteractedRef.current = true
     clearAutoTourTimer()
+    clearMapAnimationTimers()
+    popupRef.current?.remove()
+    mapRef.current?.stop()
     setActiveCityId(cityId)
     setWorldView(false)
     introArmedRef.current = false
+    focusMapOnCity(cityId)
     setFocusRequest((value) => value + 1)
   }
 
   const requestOverviewReset = () => {
     userInteractedRef.current = true
     clearAutoTourTimer()
+    clearMapAnimationTimers()
+    popupRef.current?.remove()
+    mapRef.current?.stop()
+    manualOverviewResetRef.current = true
+    introArmedRef.current = false
     setWorldView(true)
+    const map = mapRef.current
+    const source = map?.getSource('part1-city-stations')
+
+    if (source) {
+      source.setData(blankFeatureCollection())
+    }
+
+    if (map && map.isStyleLoaded()) {
+      map.flyTo({
+        center: OVERVIEW_PRESENTATION_VIEW.center,
+        zoom: OVERVIEW_PRESENTATION_VIEW.zoom,
+        pitch: OVERVIEW_PRESENTATION_VIEW.pitch,
+        bearing: OVERVIEW_PRESENTATION_VIEW.bearing,
+        curve: 1.22,
+        speed: 0.42,
+        duration: 1900,
+        essential: true,
+      })
+    }
   }
 
   const clearMapAnimationTimers = () => {
@@ -320,10 +356,10 @@ export default function CityFacilitiesGlobe() {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/light-v11',
-      center: OVERVIEW_VIEW.center,
-      zoom: OVERVIEW_VIEW.zoom - 0.7,
-      pitch: 0,
-      bearing: -8,
+      center: INITIAL_OVERVIEW_CAMERA.center,
+      zoom: INITIAL_OVERVIEW_CAMERA.zoom,
+      pitch: INITIAL_OVERVIEW_CAMERA.pitch,
+      bearing: INITIAL_OVERVIEW_CAMERA.bearing,
       attributionControl: false,
       antialias: true,
       dragRotate: false,
@@ -541,10 +577,10 @@ export default function CityFacilitiesGlobe() {
         map.stop()
         popupRef.current?.remove()
         map.jumpTo({
-          center: OVERVIEW_VIEW.center,
-          zoom: OVERVIEW_VIEW.zoom - 0.9,
-          bearing: -10,
-          pitch: 0,
+          center: INITIAL_OVERVIEW_CAMERA.center,
+          zoom: INITIAL_OVERVIEW_CAMERA.zoom,
+          bearing: INITIAL_OVERVIEW_CAMERA.bearing,
+          pitch: INITIAL_OVERVIEW_CAMERA.pitch,
         })
 
         introTimeoutRef.current = setTimeout(() => {
@@ -610,12 +646,28 @@ export default function CityFacilitiesGlobe() {
 
     if (worldView) {
       popupRef.current?.remove()
+      if (manualOverviewResetRef.current) {
+        manualOverviewResetRef.current = false
+        introArmedRef.current = false
+        map.flyTo({
+          center: OVERVIEW_PRESENTATION_VIEW.center,
+          zoom: OVERVIEW_PRESENTATION_VIEW.zoom,
+          pitch: OVERVIEW_PRESENTATION_VIEW.pitch,
+          bearing: OVERVIEW_PRESENTATION_VIEW.bearing,
+          curve: 1.22,
+          speed: 0.42,
+          duration: 1900,
+          essential: true,
+        })
+        return
+      }
+
       introArmedRef.current = true
       map.flyTo({
-        center: OVERVIEW_PRESENTATION_VIEW.center,
-        zoom: OVERVIEW_PRESENTATION_VIEW.zoom,
-        pitch: OVERVIEW_PRESENTATION_VIEW.pitch,
-        bearing: OVERVIEW_PRESENTATION_VIEW.bearing,
+        center: INITIAL_OVERVIEW_CAMERA.center,
+        zoom: INITIAL_OVERVIEW_CAMERA.zoom,
+        pitch: INITIAL_OVERVIEW_CAMERA.pitch,
+        bearing: INITIAL_OVERVIEW_CAMERA.bearing,
         curve: 1.26,
         speed: 0.36,
         duration: 2200,

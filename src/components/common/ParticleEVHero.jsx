@@ -1,5 +1,56 @@
 import { useEffect, useRef } from 'react'
 
+const HERO_PALETTES = {
+  dark: {
+    background: '#060810',
+    glowCenter: [55, 100, 210],
+    glowMid: [30, 65, 155],
+    glowOuter: [15, 30, 80],
+    grid: [60, 70, 110],
+    connection: [100, 100, 105],
+    pulse: [110, 110, 115],
+    arcBright: [180, 180, 185],
+    arcDim: [130, 130, 135],
+    arcCore: [230, 230, 232],
+    arcEndpoint: [200, 200, 205],
+    outlineBase: [70, 70, 70],
+    outlineHot: [255, 255, 255],
+    fill: [100, 100, 105],
+    trail: [110, 110, 115],
+    spark: [220, 245, 255],
+  },
+  light: {
+    background: '#eee8dd',
+    glowCenter: [201, 150, 54],
+    glowMid: [214, 176, 102],
+    glowOuter: [231, 220, 201],
+    grid: [154, 136, 109],
+    connection: [128, 110, 84],
+    pulse: [150, 127, 92],
+    arcBright: [189, 150, 80],
+    arcDim: [146, 122, 89],
+    arcCore: [240, 223, 188],
+    arcEndpoint: [214, 182, 120],
+    outlineBase: [73, 63, 52],
+    outlineHot: [214, 167, 88],
+    fill: [132, 116, 94],
+    trail: [152, 135, 109],
+    spark: [255, 248, 235],
+  },
+}
+
+function rgba(rgb, alpha) {
+  return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`
+}
+
+function mixRgb(from, to, t) {
+  return [
+    Math.round(from[0] + (to[0] - from[0]) * t),
+    Math.round(from[1] + (to[1] - from[1]) * t),
+    Math.round(from[2] + (to[2] - from[2]) * t),
+  ]
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Geometry helpers
 // ─────────────────────────────────────────────────────────────────────────────
@@ -192,34 +243,35 @@ function makeArc(x1, y1, x2, y2) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const CYCLE_MS     = 18000  // full loop duration
+const DISSOLVE_START = 0.62 // start dissolving immediately after assembly
 const ASSEMBLE_END = 0.58   // 0→58% = ~10.4 s assembly
 const HOLD_END     = 0.72   // 58→72% = ~2.5 s hold
 // 72→100% = ~5.0 s dissolve
 
 function cycleSettle(t) {
-  if (t <= ASSEMBLE_END) {
-    const s = t / ASSEMBLE_END
+  if (t <= DISSOLVE_START) {
+    const s = t / DISSOLVE_START
     return s * s * (3 - 2 * s)         // smoothstep up
   }
-  if (t <= HOLD_END) return 1.0         // held at full
-  const s = (t - HOLD_END) / (1 - HOLD_END)
+  const s = (t - DISSOLVE_START) / (1 - DISSOLVE_START)
   return 1 - s * s * (3 - 2 * s)       // smoothstep down
 }
 
 function isDissolvePhase(t) {
-  return t > HOLD_END
+  return t > DISSOLVE_START
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Component
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function ParticleEVHero() {
+export default function ParticleEVHero({ theme = 'dark' }) {
   const canvasRef = useRef(null)
   const animRef   = useRef(null)
   const mouseRef  = useRef({ x: -9999, y: -9999 })
 
   useEffect(() => {
+    const palette = HERO_PALETTES[theme] ?? HERO_PALETTES.dark
     const canvas = canvasRef.current
     const ctx    = canvas.getContext('2d')
 
@@ -293,16 +345,16 @@ export default function ParticleEVHero() {
 
     // ── Background ─────────────────────────────────────────────────────────
     function drawBackground(elapsed, carCX, carCY, settleGlobal) {
-      ctx.fillStyle = '#060810'
+      ctx.fillStyle = palette.background
       ctx.fillRect(0, 0, width, height)
 
       const pulse   = 0.80 + 0.20 * Math.sin(elapsed * 0.00175)
       const glowR   = width * 0.60 * pulse
-      const glowAlp = (0.06 + settleGlobal * 0.10) * pulse
+      const glowAlp = (theme === 'light' ? 0.08 : 0.06) + settleGlobal * (theme === 'light' ? 0.09 : 0.10)
       const grd = ctx.createRadialGradient(carCX, carCY, 0, carCX, carCY, glowR)
-      grd.addColorStop(0.00, `rgba(55,  100, 210, ${glowAlp * 1.4})`)
-      grd.addColorStop(0.28, `rgba(30,   65, 155, ${glowAlp * 0.6})`)
-      grd.addColorStop(0.60, `rgba(15,   30,  80, ${glowAlp * 0.20})`)
+      grd.addColorStop(0.00, rgba(palette.glowCenter, glowAlp * 1.4 * pulse))
+      grd.addColorStop(0.28, rgba(palette.glowMid, glowAlp * 0.6 * pulse))
+      grd.addColorStop(0.60, rgba(palette.glowOuter, glowAlp * 0.20 * pulse))
       grd.addColorStop(1.00, 'rgba(0,0,0,0)')
       ctx.fillStyle = grd
       ctx.fillRect(0, 0, width, height)
@@ -310,11 +362,12 @@ export default function ParticleEVHero() {
       const gsp = 26
       const gox = (elapsed * 0.004) % gsp
       const goy = (elapsed * 0.0025) % gsp
-      ctx.fillStyle = 'rgba(60,70,110,1)'
+      ctx.fillStyle = rgba(palette.grid, 1)
       for (let gx = width * 0.30; gx < width + gsp; gx += gsp) {
         for (let gy = -gsp; gy < height + gsp; gy += gsp) {
           const dd = Math.hypot(gx + gox - carCX, gy + goy - carCY)
-          const a  = Math.max(0, (1 - dd / (width * 0.58)) * 0.055 * settleGlobal)
+          const density = theme === 'light' ? 0.068 : 0.055
+          const a  = Math.max(0, (1 - dd / (width * 0.58)) * density * settleGlobal)
           if (a < 0.004) continue
           ctx.globalAlpha = a
           ctx.beginPath()
@@ -342,7 +395,7 @@ export default function ParticleEVHero() {
           const d2 = dx * dx + dy * dy
           if (d2 >= maxDist2) continue
           const a2 = webAlpha * (1 - Math.sqrt(d2) / maxDist) * 0.13
-          ctx.strokeStyle = `rgba(100,100,105,${a2})`
+          ctx.strokeStyle = rgba(palette.connection, a2)
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
         }
       }
@@ -362,12 +415,12 @@ export default function ParticleEVHero() {
         w.life += dt
         const t = w.life / w.maxLife
         w.r = w.maxR * (t * t)
-        ctx.strokeStyle = `rgba(110,110,115,${(1 - t) * 0.14})`
+        ctx.strokeStyle = rgba(palette.pulse, (1 - t) * 0.14)
         ctx.lineWidth = 1.8 * (1 - t * 0.7)
         ctx.beginPath(); ctx.arc(w.cx, w.cy, w.r, 0, Math.PI * 2); ctx.stroke()
         if (t > 0.12) {
           const t2 = t - 0.12
-          ctx.strokeStyle = `rgba(110,110,115,${(1 - t2) * 0.06})`
+          ctx.strokeStyle = rgba(palette.pulse, (1 - t2) * 0.06)
           ctx.lineWidth = 0.8
           ctx.beginPath(); ctx.arc(w.cx, w.cy, w.maxR * (t2 * t2), 0, Math.PI * 2); ctx.stroke()
         }
@@ -398,21 +451,19 @@ export default function ParticleEVHero() {
         const t   = arc.life / arc.maxLife
         const env = t < 0.18 ? t / 0.18 : t > 0.65 ? 1 - (t - 0.65) / 0.35 : 1
         ctx.lineWidth   = 1.2 + (1 - t) * 0.8
-        ctx.strokeStyle = arc.bright
-          ? `rgba(180,180,185,${env * 0.65})`
-          : `rgba(130,130,135,${env * 0.45})`
+        ctx.strokeStyle = arc.bright ? rgba(palette.arcBright, env * 0.65) : rgba(palette.arcDim, env * 0.45)
         ctx.beginPath()
         ctx.moveTo(arc.nodes[0].x, arc.nodes[0].y)
         for (let k = 1; k < arc.nodes.length; k++) ctx.lineTo(arc.nodes[k].x, arc.nodes[k].y)
         ctx.stroke()
         ctx.lineWidth   = 0.3
-        ctx.strokeStyle = `rgba(230,230,232,${env * 0.55})`
+        ctx.strokeStyle = rgba(palette.arcCore, env * 0.55)
         ctx.beginPath()
         ctx.moveTo(arc.nodes[0].x, arc.nodes[0].y)
         for (let k = 1; k < arc.nodes.length; k++) ctx.lineTo(arc.nodes[k].x, arc.nodes[k].y)
         ctx.stroke()
         for (const ep of [arc.nodes[0], arc.nodes[arc.nodes.length - 1]]) {
-          ctx.fillStyle = `rgba(200,200,205,${env * 0.35})`
+          ctx.fillStyle = rgba(palette.arcEndpoint, env * 0.35)
           ctx.beginPath(); ctx.arc(ep.x, ep.y, 3.5 * env, 0, Math.PI * 2); ctx.fill()
         }
       }
@@ -485,6 +536,12 @@ export default function ParticleEVHero() {
           p.vy += (edy / ed) * str
         }
 
+        if (dissolving || settleT < 0.16) {
+          const drift = (dissolving ? 0.018 : 0.010) + (1 - settleT) * 0.010
+          p.vx += Math.cos((elapsed + p.seed * 13.0) * 0.00115) * drift
+          p.vy += Math.sin((elapsed + p.seed * 9.0) * 0.00145) * drift
+        }
+
         // Mouse repulsion (only near full assembly)
         if (settleT > 0.50 && !dissolving) {
           const mdx = p.x - mx, mdy = p.y - my
@@ -496,7 +553,8 @@ export default function ParticleEVHero() {
           }
         }
 
-        p.vx *= 0.876; p.vy *= 0.876
+        const damping = dissolving || settleT < 0.16 ? 0.918 : 0.876
+        p.vx *= damping; p.vy *= damping
         p.x  += p.vx;  p.y  += p.vy
 
         const speed = Math.hypot(p.vx, p.vy)
@@ -509,7 +567,7 @@ export default function ParticleEVHero() {
           // Colour: dark grey → mid grey → near-white as speed increases
           const heat = Math.min(1, speed / 2.8)
           const c    = Math.round(70 + heat * 185)   // 70 (dark grey) → 255 (white)
-          const r = c, g = c, b = c
+          const [r, g, b] = mixRgb(palette.outlineBase, palette.outlineHot, heat)
 
           // Velocity trail during high-speed travel
           if (speed > 1.1 && settleT < 0.92) {
@@ -535,16 +593,16 @@ export default function ParticleEVHero() {
 
           // Spark flash
           if (settleT > 0.55 && !dissolving && Math.random() < 0.003) {
-            ctx.fillStyle = `rgba(220,245,255,${alpha * 0.5})`
+            ctx.fillStyle = rgba(palette.spark, alpha * 0.5)
             ctx.beginPath(); ctx.arc(p.x, p.y, p.size * 3.5, 0, Math.PI * 2); ctx.fill()
           }
 
         } else if (p.type === 'fill') {
-          ctx.fillStyle = `rgba(100,100,105,${alpha * 0.22})`
+          ctx.fillStyle = rgba(palette.fill, alpha * 0.22)
           ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill()
 
         } else {
-          ctx.fillStyle = `rgba(110,110,115,${alpha * 0.38})`
+          ctx.fillStyle = rgba(palette.trail, alpha * 0.38)
           ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill()
         }
       }
@@ -563,7 +621,7 @@ export default function ParticleEVHero() {
       canvas.removeEventListener('mousemove', onMove)
       canvas.removeEventListener('mouseleave', onLeave)
     }
-  }, [])
+  }, [theme])
 
   return (
     <canvas

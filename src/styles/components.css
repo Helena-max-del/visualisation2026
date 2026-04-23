@@ -366,7 +366,7 @@
 
 .about-team-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -400,6 +400,7 @@
   font-size: 15px;
   font-weight: 700;
   color: #23262d;
+  line-height: 1.2;
 }
 
 .about-team-card span {
@@ -407,6 +408,10 @@
   font-size: 13px;
   color: rgba(35, 38, 45, 0.56);
   margin-top: 2px;
+}
+
+.about-team-card > div:last-child {
+  min-width: 0;
 }
 
 /* ── Methodology prose ────────────────────────────────────────────────────── */

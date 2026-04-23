@@ -27,10 +27,9 @@ const PARTS = [
 ]
 
 const TEAM = [
-  { name: 'Helena', role: 'Lead developer & data visualisation' },
-  { name: 'Team member 2', role: 'Data pipeline & spatial analysis' },
-  { name: 'Team member 3', role: 'UX design & content writing' },
-  { name: 'Team member 4', role: 'Cartography & Part 3 tool' },
+  { name: 'XINLEI SHI' },
+  { name: 'PENGHE GAO' },
+  { name: 'JIAHUI LI' },
 ]
 
 const ALL_SOURCES = [
@@ -95,13 +94,12 @@ function PartCard({ number, title, summary, accent }) {
   )
 }
 
-function TeamCard({ name, role }) {
+function TeamCard({ name }) {
   return (
     <div className="about-team-card">
       <div className="about-team-avatar">{name[0]}</div>
       <div>
         <strong>{name}</strong>
-        <span>{role}</span>
       </div>
     </div>
   )

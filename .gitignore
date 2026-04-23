@@ -5,3 +5,6 @@ dist/
 .DS_Store
 Thumbs.db
 *.log
+_teammate_part3/
+_teammate_support/
+_teammate_zip/
