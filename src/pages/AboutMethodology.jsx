@@ -118,7 +118,6 @@ export default function AboutMethodology() {
 
         {/* ── Hero ── */}
         <header className="about-heading">
-          <p className="about-eyebrow">UCL CASA · CEGE0029 Urban Visualisation · 2026</p>
           <h1>About This Project</h1>
           <p>
             <em>Am I Ready for an EV?</em> is a group data-visualisation project exploring the
