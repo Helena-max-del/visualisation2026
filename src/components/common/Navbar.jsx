@@ -5,7 +5,7 @@ const links = [
   { to: '/part1', label: 'Growth' },
   { to: '/part2', label: 'Adequacy' },
   { to: '/part3', label: 'Tool' },
-  { to: '/about', label: 'Method' },
+  { to: '/about', label: 'About' },
 ]
 
 export default function Navbar() {

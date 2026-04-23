@@ -7,7 +7,7 @@ const sectionCards = [
     title: 'Part 1 | Growth',
     description:
       'Track how the UK public charging network has expanded over time and how the speed mix has changed.',
-    image: '/assets/part1/policy-2024.png',
+    image: '/assets/overview/overview-growth.png',
     to: '/part1',
   },
   {
@@ -15,7 +15,7 @@ const sectionCards = [
     title: 'Part 2 | Adequacy',
     description:
       'Compare charger supply with likely local dependence on public infrastructure at borough and city scale.',
-    image: '/assets/part1/policy-2022.png',
+    image: '/assets/overview/overview-adequacy.png',
     to: '/part2',
   },
   {
@@ -23,7 +23,7 @@ const sectionCards = [
     title: 'Part 3 | Tool',
     description:
       'Translate the findings into a resident-facing interface for checking local charging accessibility.',
-    image: '/assets/part1/policy-2019.png',
+    image: '/assets/overview/overview-tool.png',
     to: '/part3',
   },
 ]

@@ -286,6 +286,34 @@ export default function CityFacilitiesGlobe() {
     })
   }
 
+  const applyOverviewReset = () => {
+    const map = mapRef.current
+    if (!map || !map.isStyleLoaded()) return false
+
+    popupRef.current?.remove()
+    clearMapAnimationTimers()
+    map.stop()
+
+    const source = map.getSource('part1-city-stations')
+    if (source) {
+      source.setData(blankFeatureCollection())
+    }
+
+    map.flyTo({
+      center: OVERVIEW_PRESENTATION_VIEW.center,
+      zoom: OVERVIEW_PRESENTATION_VIEW.zoom,
+      pitch: OVERVIEW_PRESENTATION_VIEW.pitch,
+      bearing: OVERVIEW_PRESENTATION_VIEW.bearing,
+      curve: 1.18,
+      speed: 0.62,
+      duration: 1600,
+      essential: true,
+    })
+
+    manualOverviewResetRef.current = false
+    return true
+  }
+
   const requestCityFocus = (cityId) => {
     userInteractedRef.current = true
     clearAutoTourTimer()
@@ -308,25 +336,8 @@ export default function CityFacilitiesGlobe() {
     manualOverviewResetRef.current = true
     introArmedRef.current = false
     setWorldView(true)
-    const map = mapRef.current
-    const source = map?.getSource('part1-city-stations')
-
-    if (source) {
-      source.setData(blankFeatureCollection())
-    }
-
-    if (map && map.isStyleLoaded()) {
-      map.flyTo({
-        center: OVERVIEW_PRESENTATION_VIEW.center,
-        zoom: OVERVIEW_PRESENTATION_VIEW.zoom,
-        pitch: OVERVIEW_PRESENTATION_VIEW.pitch,
-        bearing: OVERVIEW_PRESENTATION_VIEW.bearing,
-        curve: 1.22,
-        speed: 0.42,
-        duration: 1900,
-        essential: true,
-      })
-    }
+    setFocusRequest((value) => value + 1)
+    applyOverviewReset()
   }
 
   const clearMapAnimationTimers = () => {
@@ -647,19 +658,8 @@ export default function CityFacilitiesGlobe() {
     if (worldView) {
       popupRef.current?.remove()
       if (manualOverviewResetRef.current) {
-        manualOverviewResetRef.current = false
         introArmedRef.current = false
-        map.flyTo({
-          center: OVERVIEW_PRESENTATION_VIEW.center,
-          zoom: OVERVIEW_PRESENTATION_VIEW.zoom,
-          pitch: OVERVIEW_PRESENTATION_VIEW.pitch,
-          bearing: OVERVIEW_PRESENTATION_VIEW.bearing,
-          curve: 1.22,
-          speed: 0.42,
-          duration: 1900,
-          essential: true,
-        })
-        return
+        if (applyOverviewReset()) return
       }
 
       introArmedRef.current = true

@@ -27,9 +27,9 @@ const PARTS = [
 ]
 
 const TEAM = [
-  { name: 'XINLEI SHI' },
-  { name: 'PENGHE GAO' },
-  { name: 'JIAHUI LI' },
+  { name: 'XINLEI SHI', photo: '/assets/team/xinlei-shi.jpg' },
+  { name: 'PENGHE GAO', photo: '/assets/team/penghe-gao.jpg' },
+  { name: 'JIAHUI LI', photo: '/assets/team/jiahui-li.jpg' },
 ]
 
 const ALL_SOURCES = [
@@ -94,10 +94,12 @@ function PartCard({ number, title, summary, accent }) {
   )
 }
 
-function TeamCard({ name }) {
+function TeamCard({ name, photo }) {
   return (
     <div className="about-team-card">
-      <div className="about-team-avatar">{name[0]}</div>
+      <div className="about-team-avatar">
+        {photo ? <img src={photo} alt={name} className="about-team-avatar-image" /> : name[0]}
+      </div>
       <div>
         <strong>{name}</strong>
       </div>
@@ -159,7 +161,7 @@ export default function AboutMethodology() {
         {/* ── Methodology ── */}
         <section className="about-section">
           <div className="about-section__header">
-            <p className="about-eyebrow">Methodology</p>
+            <p className="about-eyebrow">About</p>
             <h2>How the project was built</h2>
             <p>
               This section provides the full analytical methodology across all three parts of
